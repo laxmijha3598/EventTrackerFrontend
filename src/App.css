@@ -20,3 +20,33 @@ form {
   padding: 1rem;
   border: 1px solid #ccc;
 }
+
+.dropdown {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  cursor: pointer;
+  background-color: white;
+}
+
+.dropdown-list {
+  list-style: none;
+  border: 1px solid #ccc;
+  margin: 0;
+  padding: 0;
+  max-height: 150px;
+  overflow-y: auto;
+  background-color: white;
+  position: absolute;
+  z-index: 10;
+  width: 200px;
+}
+
+.dropdown-list li {
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.dropdown-list li:hover {
+  background-color: #f0f0f0;
+}
+
