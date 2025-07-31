@@ -6,6 +6,8 @@ const Home = () => {
   const [cities, setCities] = useState([]);
   const [selectedState, setSelectedState] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
+  const [showStates, setShowStates] = useState(false);
+  const [showCities, setShowCities] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,12 +16,17 @@ const Home = () => {
       .then((data) => setStates(data));
   }, []);
 
-  const handleStateChange = (e) => {
-    const state = e.target.value;
+  const handleStateSelect = (state) => {
     setSelectedState(state);
+    setShowStates(false);
     fetch(`https://eventdata.onrender.com/cities/${state}`)
       .then((res) => res.json())
       .then((data) => setCities(data));
+  };
+
+  const handleCitySelect = (city) => {
+    setSelectedCity(city);
+    setShowCities(false);
   };
 
   const handleSearch = (e) => {
@@ -32,40 +39,44 @@ const Home = () => {
   return (
     <div className="home">
       <form onSubmit={handleSearch}>
-        <div id="state">
-          <label htmlFor="state-select">State:</label>
-          <select
-            id="state-select"
-            data-testid="state-select"
-            onChange={handleStateChange}
-            value={selectedState}
-            required
+        <div id="state" className="dropdown">
+          <label>State:</label>
+          <div
+            onClick={() => setShowStates(!showStates)}
+            className="dropdown-label"
+            data-testid="state-dropdown"
           >
-            <option value="">Select</option>
-            {states.map((state) => (
-              <option key={state} value={state}>
-                {state}
-              </option>
-            ))}
-          </select>
+            {selectedState || "Select State"}
+          </div>
+          {showStates && (
+            <ul className="dropdown-list">
+              {states.map((state) => (
+                <li key={state} onClick={() => handleStateSelect(state)}>
+                  {state}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
-        <div id="city">
-          <label htmlFor="city-select">City:</label>
-          <select
-            id="city-select"
-            data-testid="city-select"
-            onChange={(e) => setSelectedCity(e.target.value)}
-            value={selectedCity}
-            required
+        <div id="city" className="dropdown">
+          <label>City:</label>
+          <div
+            onClick={() => setShowCities(!showCities)}
+            className="dropdown-label"
+            data-testid="city-dropdown"
           >
-            <option value="">Select</option>
-            {cities.map((city) => (
-              <option key={city} value={city}>
-                {city}
-              </option>
-            ))}
-          </select>
+            {selectedCity || "Select City"}
+          </div>
+          {showCities && (
+            <ul className="dropdown-list">
+              {cities.map((city) => (
+                <li key={city} onClick={() => handleCitySelect(city)}>
+                  {city}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         <button type="submit" id="searchBtn">Search</button>

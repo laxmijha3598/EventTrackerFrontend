@@ -3,29 +3,40 @@ body {
   margin: 0;
   padding: 0;
 }
+
 nav {
   background: #007bff;
   padding: 1rem;
 }
+
 nav a {
   color: white;
   margin-right: 1rem;
   text-decoration: none;
 }
+
 form {
   margin: 2rem;
 }
-.event-card, .my-bookings div {
+
+.event-card,
+.my-bookings div {
   margin: 1rem;
   padding: 1rem;
   border: 1px solid #ccc;
 }
 
 .dropdown {
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.dropdown-label {
   border: 1px solid #ccc;
   padding: 0.5rem;
   cursor: pointer;
   background-color: white;
+  width: 200px;
 }
 
 .dropdown-list {
@@ -49,4 +60,3 @@ form {
 .dropdown-list li:hover {
   background-color: #f0f0f0;
 }
-
