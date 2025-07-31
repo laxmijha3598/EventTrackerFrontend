@@ -6,8 +6,8 @@ const BookingCard = ({ booking }) => {
       <h3>{booking.eventName}</h3>
       <p>{booking.address}</p>
       <p>{booking.city}, {booking.state}</p>
-      <p>Date: {booking.date}</p>
-      <p>Time: {booking.time}</p>
+      <p>Date: {new Date(booking.bookingDate || booking.date).toLocaleDateString()}</p>
+      <p>Time: {booking.bookingTime || booking.time}</p>
     </div>
   );
 };
