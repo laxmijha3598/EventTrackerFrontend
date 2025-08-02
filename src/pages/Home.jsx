@@ -8,20 +8,39 @@ const Home = () => {
   const [selectedCity, setSelectedCity] = useState("");
   const [showStates, setShowStates] = useState(false);
   const [showCities, setShowCities] = useState(false);
+  const [loadingStates, setLoadingStates] = useState(true);  // Loading state for states
+  const [loadingCities, setLoadingCities] = useState(false);  // Loading state for cities
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Fetch states and set loading to false once data is fetched
     fetch("https://eventdata.onrender.com/states")
       .then((res) => res.json())
-      .then((data) => setStates(data));
+      .then((data) => {
+        setStates(data);
+        setLoadingStates(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching states:", err);
+        setLoadingStates(false);  // Stop loading even if there's an error
+      });
   }, []);
 
   const handleStateSelect = (state) => {
     setSelectedState(state);
     setShowStates(false);
+    setLoadingCities(true); // Start loading cities for the selected state
+
     fetch(`https://eventdata.onrender.com/cities/${state}`)
       .then((res) => res.json())
-      .then((data) => setCities(data));
+      .then((data) => {
+        setCities(data);
+        setLoadingCities(false); // Stop loading cities once fetched
+      })
+      .catch((err) => {
+        console.error("Error fetching cities:", err);
+        setLoadingCities(false); // Stop loading even if there's an error
+      });
   };
 
   const handleCitySelect = (city) => {
@@ -49,12 +68,20 @@ const Home = () => {
             {selectedState || "Select State"}
           </div>
           {showStates && (
-            <ul className="dropdown-list">
-              {states.map((state) => (
-                <li key={state} onClick={() => handleStateSelect(state)}>
-                  {state}
-                </li>
-              ))}
+            <ul className="dropdown-list" data-testid="state-options">
+              {loadingStates ? (
+                <li>Loading...</li> // Show loading state until data is fetched
+              ) : (
+                states.map((state) => (
+                  <li
+                    key={state}
+                    onClick={() => handleStateSelect(state)}
+                    data-testid={`state-option-${state}`}
+                  >
+                    {state}
+                  </li>
+                ))
+              )}
             </ul>
           )}
         </div>
@@ -69,17 +96,27 @@ const Home = () => {
             {selectedCity || "Select City"}
           </div>
           {showCities && (
-            <ul className="dropdown-list">
-              {cities.map((city) => (
-                <li key={city} onClick={() => handleCitySelect(city)}>
-                  {city}
-                </li>
-              ))}
+            <ul className="dropdown-list" data-testid="city-options">
+              {loadingCities ? (
+                <li>Loading...</li> // Show loading state until cities are fetched
+              ) : (
+                cities.map((city) => (
+                  <li
+                    key={city}
+                    onClick={() => handleCitySelect(city)}
+                    data-testid={`city-option-${city}`}
+                  >
+                    {city}
+                  </li>
+                ))
+              )}
             </ul>
           )}
         </div>
 
-        <button type="submit" id="searchBtn">Search</button>
+        <button type="submit" id="searchBtn" data-testid="search-button">
+          Search
+        </button>
       </form>
     </div>
   );
